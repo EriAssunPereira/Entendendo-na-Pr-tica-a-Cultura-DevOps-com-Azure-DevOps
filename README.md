@@ -29,3 +29,56 @@ Vamos criar um pipeline de CI/CD no Azure DevOps para um aplicativo web. Aqui es
 5. **Monitoramento**: Configure métricas e alertas para monitorar o desempenho do aplicativo.
 
 Com esses módulos, qualquer um estará no caminho para se tornar um especialista em DevOps com o Azure DevOps.
+
+Criando um exemplo de código para um pipeline de **Integração Contínua (CI)** usando o **Azure DevOps**. Neste exemplo, usaremos um aplicativo web simples em **Node.js**.
+
+1. **Configuração Inicial**:
+   - Crie um novo projeto no **Azure DevOps**.
+   - Configure um repositório Git para o código-fonte do aplicativo.
+
+2. **Pipeline de CI**:
+   - Crie um arquivo chamado `azure-pipelines.yml` na raiz do seu repositório.
+   - Adicione o seguinte conteúdo ao arquivo:
+
+```yaml
+# azure-pipelines.yml
+
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+jobs:
+- job: Build
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '14.x'
+    displayName: 'Install Node.js'
+  - script: |
+      npm install
+      npm run build
+    displayName: 'Build and Test'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: 'drop'
+    displayName: 'Publish Artifact'
+```
+
+3. **Explicação**:
+   - O arquivo `azure-pipelines.yml` define o fluxo de trabalho do pipeline.
+   - O gatilho (`trigger`) é configurado para executar o pipeline quando houver alterações no branch `main`.
+   - A imagem da máquina virtual (`vmImage`) é definida como `ubuntu-latest`.
+   - O job `Build` contém três etapas:
+     - Instalação do Node.js.
+     - Execução dos comandos `npm install` e `npm run build`.
+     - Publicação dos artefatos gerados.
+
+4. **Execução**:
+   - Faça um commit no seu repositório.
+   - O Azure DevOps detectará a alteração e executará o pipeline.
+   - Verifique os logs para garantir que a compilação e os testes foram bem-sucedidos.
+
+Lembre-se de adaptar esse exemplo ao seu projeto específico. O Azure DevOps oferece muitas opções para personalizar seus pipelines de CI/CD.
